@@ -14,6 +14,7 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta 
 import os
+from core.utils.jazzmin import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,18 +35,26 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+    'cloudinary_storage',
+    'cloudinary',
     'rest_framework_simplejwt',
     "drf_spectacular",
     "corsheaders",
     'users',
     'country',
+    'product',
+    'store',
+    'review',
+    'cart',
+    'wishlist',
 ]
 
 MIDDLEWARE = [
@@ -104,6 +113,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -144,6 +154,21 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dvmqwrhbx',
+    'API_KEY': '831421472727561',
+    'API_SECRET': 'IeJhUr7jhK9-qU-yjm3n_xGG3Js',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+if DEBUG:
+    # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -180,7 +205,8 @@ CORS_ALLOW_HEADERS = [
 # Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'core.utils.sso_middleware.SSOAuthentication',
+        # 'core.utils.sso_middleware.SSOAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     "DEFAULT_SCHEMA_CLASS":
     "drf_spectacular.openapi.AutoSchema",
